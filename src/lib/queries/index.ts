@@ -67,26 +67,27 @@ export const latencyQueryOptions = (enabled: boolean) =>
 	});
 
 async function getNetworkLatency(): Promise<string> {
-	try {
-		const start = performance.now();
-		await fetch(
-			'https://cloudflare-dns.com/dns-query?name=example.com&type=A',
-			{
+	const probes = [
+		'https://cloudflare-dns.com/dns-query?name=example.com&type=A',
+		'https://1.1.1.1/dns-query?name=example.com&type=A',
+	];
+
+	for (const url of probes) {
+		try {
+			const start = performance.now();
+			const resp = await fetch(url, {
 				headers: { Accept: 'application/dns-json' },
 				cache: 'no-store',
 				signal: AbortSignal.timeout(800),
-			},
-		);
-
-		const latency = performance.now() - start;
-		return `${Math.round(latency)}ms`;
-	} catch (error) {
-		await errorLog(error);
-
-		// Timeout or network error
-		if (error instanceof Error && error.name === 'TimeoutError') {
-			return '>800ms';
+			});
+			if (resp.ok) {
+				return `${Math.round(performance.now() - start)}ms`;
+			}
+		} catch {
+			// try next probe
 		}
-		return '--';
 	}
+
+	await errorLog('All network latency probes failed');
+	return '--';
 }

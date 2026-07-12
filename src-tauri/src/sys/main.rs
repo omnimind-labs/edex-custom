@@ -401,14 +401,38 @@ fn epoch_to_date(epoch: u64) -> String {
 }
 
 fn extract_network(networks: &Networks) -> NetworkData {
+    // Skip loopback and known virtual/container interfaces so WSL2 / Docker
+    // bridge NICs don't report false traffic. Physical NICs on Linux are
+    // typically eth*, enp*, wl*, wlan*, eno*; on macOS en*; Windows adapters
+    // have descriptive names. We exclude:
+    //   lo / lo0       — loopback
+    //   vEthernet*     — WSL2 / Hyper-V virtual switches
+    //   docker*        — Docker bridge
+    //   virbr*         — libvirt bridge
+    //   vmnet*         — VMware
+    //   veth*          — container veth pairs
+    fn is_virtual(name: &str) -> bool {
+        let n = name.to_lowercase();
+        n == "lo"
+            || n == "lo0"
+            || n.starts_with("vethernet")
+            || n.starts_with("docker")
+            || n.starts_with("virbr")
+            || n.starts_with("vmnet")
+            || n.starts_with("veth")
+    }
+
     let mut received: f64 = 0f64;
     let mut transmitted: f64 = 0f64;
     let mut total_receive: u64 = 0;
     let mut total_transmitted: u64 = 0;
-    for (_interface_name, data) in networks {
+
+    for (interface_name, data) in networks.iter() {
+        if is_virtual(interface_name) {
+            continue;
+        }
         received += data.received() as f64;
         transmitted += data.transmitted() as f64;
-
         total_receive += data.total_received();
         total_transmitted += data.total_transmitted();
     }
