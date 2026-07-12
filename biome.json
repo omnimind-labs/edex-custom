@@ -1,0 +1,72 @@
+{
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"vcs": {
+		"enabled": true,
+		"clientKind": "git",
+		"useIgnoreFile": true
+	},
+	"files": {
+		"includes": [
+			"src/**",
+			"!!**/.idea",
+			"!!**/node_modules",
+			"!!**/dist",
+			"!!**/src-tauri/target",
+			"!!**/public/styles/augmented-ui.min.css",
+			"!!**/*.config.*"
+		]
+	},
+	"formatter": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"domains": {
+			"solid": "recommended"
+		},
+		"rules": {
+			"recommended": true,
+			"suspicious": {
+				"noConsole": "error",
+				"noEmptyBlockStatements": "error",
+				"useIterableCallbackReturn": "off"
+			},
+			"complexity": {
+				"noBannedTypes": "error",
+				"noUselessFragments": "off"
+			},
+			"a11y": {
+				"noSvgWithoutTitle": "off",
+				"noStaticElementInteractions": "off"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single",
+			"semicolons": "always",
+			"arrowParentheses": "asNeeded"
+		}
+	},
+	"css": {
+		"parser": {
+			"cssModules": true,
+			"allowWrongLineComments": true,
+			"tailwindDirectives": true
+		},
+		"formatter": {
+			"enabled": true
+		}
+	},
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"source": {
+				"organizeImports": {
+					"level": "on",
+					"options": {}
+				}
+			}
+		}
+	}
+}

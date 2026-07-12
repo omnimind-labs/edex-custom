@@ -1,0 +1,48 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":disableDependencyDashboard"],
+  "schedule": ["every weekend"],
+  "packageRules": [
+    {
+      "updateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "groupName": "tauri",
+      "matchPackageNames": ["@tauri-apps/*", "tauri*"]
+    },
+    {
+      "groupName": "framework",
+      "matchPackageNames": ["solid*", "@solid-primitives/*", "@tanstack/solid-*"]
+    },
+    {
+      "groupName": "terminal",
+      "matchPackageNames": ["@xterm/*"]
+    },
+    {
+      "groupName": "styling",
+      "matchPackageNames": ["tailwindcss", "@tailwindcss/*", "tailwind-merge", "augmented*"]
+    },
+    {
+      "groupName": "build-tools",
+      "matchPackageNames": ["vite*", "@vitejs/*", "typescript"]
+    },
+    {
+      "groupName": "code-quality",
+      "matchPackageNames": ["@biomejs/*", "husky"]
+    },
+    {
+      "groupName": "definitelyTyped",
+      "matchPackageNames": ["@types/*"]
+    },
+    {
+      "groupName": "utilities",
+      "matchPackageNames": ["lodash*", "color", "clsx", "pretty-bytes", "smoothie"]
+    },
+    {
+      "groupName": "rust-runtime",
+      "matchPackageNames": ["serde*", "tokio", "log", "sysinfo"]
+    }
+  ],
+  "postUpdateOptions": ["pnpmDedupe"]
+}
