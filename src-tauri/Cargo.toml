@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "A customized sci-fi terminal emulator based on zluo01/edex-ui"
 authors = ["eDEX Custom"]
 license = ""
-repository = "https://github.com/zluo01/edex-ui"
+repository = "https://github.com/YOUR_USERNAME/edex-custom"
 edition = "2021"
 rust-version = "1.95.0"
 
