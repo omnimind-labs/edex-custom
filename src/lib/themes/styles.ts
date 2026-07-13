@@ -95,6 +95,36 @@ const INTERSTELLAR: Style = {
 	},
 };
 
+const EDEX_CUSTOM: Style = {
+	colors: {
+		main: 'rgb(0, 255, 128)',
+		black: '#000000',
+		grey: '#0d1f10',
+		red: '#ff4040',
+		brightRed: '#ff6060',
+		green: '#00ff80',
+		brightGreen: '#40ffaa',
+		yellow: '#ffcc00',
+		brightYellow: '#ffdd44',
+		blue: '#00aaff',
+		brightBlue: '#44ccff',
+		magenta: '#cc44ff',
+		brightMagenta: '#dd88ff',
+		cyan: '#00ffee',
+		brightCyan: '#44ffee',
+		white: '#ccffdd',
+		brightWhite: '#eeffee',
+	},
+	terminal: {
+		fontFamily: 'Fira Mono',
+		cursorStyle: 'block',
+		foreground: '#00ff80',
+		background: '#030a05',
+		cursor: '#00ff80',
+		cursorAccent: '#ffcc00',
+	},
+};
+
 export function selectStyle(theme: Theme) {
 	switch (theme) {
 		case Theme.TRON:
@@ -107,6 +137,8 @@ export function selectStyle(theme: Theme) {
 			return BLADE;
 		case Theme.INTERSTELLAR:
 			return INTERSTELLAR;
+		case Theme.EDEX_CUSTOM:
+			return EDEX_CUSTOM;
 	}
 }
 
@@ -116,4 +148,5 @@ export enum Theme {
 	BLADE = 'BLADE',
 	CYBORG = 'CYBORG',
 	INTERSTELLAR = 'INTERSTELLAR',
+	EDEX_CUSTOM = 'EDEX_CUSTOM',
 }

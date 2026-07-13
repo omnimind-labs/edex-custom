@@ -2,7 +2,7 @@ import { load } from '@tauri-apps/plugin-store';
 import { Theme } from '@/lib/themes/styles';
 
 const store = await load('.settings.dat', {
-	defaults: { showHiddenFile: false, theme: Theme.TRON },
+	defaults: { showHiddenFile: false, theme: Theme.EDEX_CUSTOM },
 	autoSave: true,
 });
 
