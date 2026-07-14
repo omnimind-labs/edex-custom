@@ -1,18 +1,19 @@
-import { type Event, listen, type UnlistenFn } from '@tauri-apps/api/event';
-import type { Terminal } from '@xterm/xterm';
-import { errorLog, traceLog } from '@/lib/log';
+import { type Event, listen, type UnlistenFn } from "@tauri-apps/api/event";
+import { Unicode11Addon } from "@xterm/addon-unicode11";
+import type { Terminal } from "@xterm/xterm";
+import { errorLog, traceLog } from "@/lib/log";
 import {
 	initializeSession,
 	resizeSession,
 	updateCurrentSession,
 	writeToSession,
-} from '@/lib/os';
-import { type Addons, createTerminal } from '@/lib/terminal';
-import { useTheme } from '@/lib/themes';
-import generateTerminalTheme from '@/lib/themes/terminal';
-import { cn } from '@/lib/utils';
-import type { TerminalProps } from '@/models';
-import '@xterm/xterm/css/xterm.css';
+} from "@/lib/os";
+import { type Addons, createTerminal } from "@/lib/terminal";
+import { useTheme } from "@/lib/themes";
+import generateTerminalTheme from "@/lib/themes/terminal";
+import { cn } from "@/lib/utils";
+import type { TerminalProps } from "@/models";
+import "@xterm/xterm/css/xterm.css";
 import {
 	type Accessor,
 	createEffect,
@@ -20,7 +21,7 @@ import {
 	on,
 	onCleanup,
 	onMount,
-} from 'solid-js';
+} from "solid-js";
 
 function gcd(a: number, b: number): number {
 	return b === 0 ? a : gcd(b, a % b);
@@ -30,7 +31,7 @@ async function resize(id: string, term: Terminal, addons: Addons) {
 	const fitAddon = addons.fit;
 	const dimensions = fitAddon.proposeDimensions();
 	if (!dimensions) {
-		await errorLog('Fail to get propose dimensions');
+		await errorLog("Fail to get propose dimensions");
 		return;
 	}
 	let { cols, rows } = dimensions;
@@ -68,7 +69,7 @@ function useScreenWidth(): Accessor<number> {
 	const controller = new AbortController();
 
 	window.addEventListener(
-		'resize',
+		"resize",
 		() => {
 			setScreenWidth(window.innerWidth);
 		},
@@ -126,7 +127,7 @@ function Session({ id, active }: SessionProps) {
 			await traceLog(`Initialize terminal interface. Id: ${id}`);
 			if (!terminalEl) {
 				await errorLog(
-					'terminalEl is undefined in onMount, this should not happen',
+					"terminalEl is undefined in onMount, this should not happen",
 				);
 				return;
 			}
@@ -141,11 +142,16 @@ function Session({ id, active }: SessionProps) {
 
 			await initializeSession(id);
 
+			const unicode11Addon = new Unicode11Addon();
+			terminal.term.loadAddon(unicode11Addon);
+			unicode11Addon.activate(terminal.term);
+			terminal.term.unicode.activeVersion = "11";
+
 			await resize(id, terminal.term, terminal.addons);
 
-			terminal.term.onData(v => writeToSession(id, v).catch(errorLog));
+			terminal.term.onData((v) => writeToSession(id, v).catch(errorLog));
 
-			addEventListener('resize', () => resizeTerminal(id), {
+			addEventListener("resize", () => resizeTerminal(id), {
 				signal: controller.signal,
 			});
 
@@ -159,7 +165,7 @@ function Session({ id, active }: SessionProps) {
 	createEffect(
 		on(
 			active,
-			async active => {
+			async (active) => {
 				try {
 					if (active === id) {
 						await resizeTerminal(id);
@@ -180,7 +186,7 @@ function Session({ id, active }: SessionProps) {
 	createEffect(
 		on(
 			theme,
-			async theme => {
+			async (theme) => {
 				if (terminal?.term) {
 					terminal.term.options = { ...generateTerminalTheme(theme) };
 				}
@@ -193,7 +199,7 @@ function Session({ id, active }: SessionProps) {
 	createEffect(
 		on(
 			fontSize,
-			async fontSize => {
+			async (fontSize) => {
 				if (terminal?.term) {
 					terminal.term.options.fontSize = fontSize;
 				}
@@ -203,8 +209,8 @@ function Session({ id, active }: SessionProps) {
 	);
 
 	return (
-		<div class={cn(active() !== id && 'hidden', 'size-full p-2')}>
-			<div class="size-full" ref={el => (terminalEl = el)} />
+		<div class={cn(active() !== id && "hidden", "size-full p-2")}>
+			<div class="size-full" ref={(el) => (terminalEl = el)} />
 		</div>
 	);
 }

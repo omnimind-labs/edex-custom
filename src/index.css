@@ -27,8 +27,9 @@
 	--text-xxs--line-height: 12px;
 
 	--font-serif:
-		Fira Mono, Fira Code, ui-serif, Georgia, Cambria, "Times New Roman", Times,
-		serif;
+		"FiraCode Nerd Font", "FiraMono Nerd Font", "Hack Nerd Font",
+		"JetBrainsMono Nerd Font", Fira Mono, Fira Code, ui-serif, Georgia, Cambria,
+		"Times New Roman", Times, serif;
 	--font-united_sans_light: united-sans-light;
 	--font-united_sans_medium: united-sans-medium;
 
