@@ -1,48 +1,22 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", ":disableDependencyDashboard"],
+  "extends": ["config:recommended"],
   "schedule": ["every weekend"],
   "packageRules": [
     {
-      "updateTypes": ["minor", "patch", "pin", "digest"],
+      "matchManagers": ["cargo"],
+      "groupName": "Rust dependencies",
       "automerge": true
     },
     {
-      "groupName": "tauri",
-      "matchPackageNames": ["@tauri-apps/*", "tauri*"]
+      "matchManagers": ["npm"],
+      "groupName": "JS dependencies",
+      "automerge": true
     },
     {
-      "groupName": "framework",
-      "matchPackageNames": ["solid*", "@solid-primitives/*", "@tanstack/solid-*"]
-    },
-    {
-      "groupName": "terminal",
-      "matchPackageNames": ["@xterm/*"]
-    },
-    {
-      "groupName": "styling",
-      "matchPackageNames": ["tailwindcss", "@tailwindcss/*", "tailwind-merge", "augmented*"]
-    },
-    {
-      "groupName": "build-tools",
-      "matchPackageNames": ["vite*", "@vitejs/*", "typescript"]
-    },
-    {
-      "groupName": "code-quality",
-      "matchPackageNames": ["@biomejs/*", "husky"]
-    },
-    {
-      "groupName": "definitelyTyped",
-      "matchPackageNames": ["@types/*"]
-    },
-    {
-      "groupName": "utilities",
-      "matchPackageNames": ["lodash*", "color", "clsx", "pretty-bytes", "smoothie"]
-    },
-    {
-      "groupName": "rust-runtime",
-      "matchPackageNames": ["serde*", "tokio", "log", "sysinfo"]
+      "matchPackageNames": ["tauri", "tauri-build"],
+      "automerge": false,
+      "labels": ["tauri-upgrade"]
     }
-  ],
-  "postUpdateOptions": ["pnpmDedupe"]
+  ]
 }
