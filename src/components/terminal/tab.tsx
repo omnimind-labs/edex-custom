@@ -1,4 +1,11 @@
-import { createSignal, Index, Match, Switch } from 'solid-js';
+import {
+	createSignal,
+	Index,
+	Match,
+	onCleanup,
+	onMount,
+	Switch,
+} from 'solid-js';
 import { cn } from '@/lib/utils';
 
 interface TerminalSelectionTabProps {
@@ -9,6 +16,25 @@ interface TerminalSelectionTabProps {
 }
 
 function TerminalSelectionTab(props: TerminalSelectionTabProps) {
+	onMount(() => {
+		function handleTabSwitch(e: KeyboardEvent) {
+			if (!e.ctrlKey || e.key !== 'Tab') return;
+			e.preventDefault();
+			const ids = props.terminalIds();
+			const current = ids.indexOf(props.active());
+			if (current === -1) return;
+			if (e.shiftKey) {
+				const prev = (current - 1 + ids.length) % ids.length;
+				props.switchTab(ids[prev]);
+			} else {
+				const next = (current + 1) % ids.length;
+				props.switchTab(ids[next]);
+			}
+		}
+		document.addEventListener('keydown', handleTabSwitch);
+		onCleanup(() => document.removeEventListener('keydown', handleTabSwitch));
+	});
+
 	const [editingId, setEditingId] = createSignal<string | null>(null);
 	const [terminalNames, setTerminalNames] = createSignal<
 		Record<string, string>

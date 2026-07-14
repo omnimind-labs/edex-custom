@@ -1,6 +1,7 @@
-import type { Resource } from 'solid-js';
+import { createSignal, onMount, type Resource } from 'solid-js';
 import ShowHiddenFileSetting from '@/components/setting/hidden';
 import ChangeThemeSelection from '@/components/setting/theme';
+import { getShell, setShell } from '@/lib/setting';
 import { closeModal } from '@/lib/utils';
 
 interface SettingProps {
@@ -9,6 +10,17 @@ interface SettingProps {
 }
 
 export default function Setting(props: SettingProps) {
+	const [shell, setShellSignal] = createSignal('');
+
+	onMount(async () => {
+		setShellSignal(await getShell());
+	});
+
+	async function handleShellInput(value: string) {
+		setShellSignal(value);
+		await setShell(value);
+	}
+
 	return (
 		<dialog
 			id="setting-modal"
@@ -36,6 +48,18 @@ export default function Setting(props: SettingProps) {
 								changeHidden={props.changeHidden}
 							/>
 							<ChangeThemeSelection />
+							<div class="flex flex-row flex-nowrap items-center justify-between py-1">
+								<span class="text-main sm:text-base md:text-xl lg:text-3xl xl:text-5xl">
+									Shell
+								</span>
+								<input
+									type="text"
+									class="border-default bg-secondary text-main relative block w-32 cursor-text appearance-none border-2 border-solid px-2 text-center focus:outline-hidden sm:text-sm md:text-lg lg:text-2xl xl:text-3xl"
+									placeholder="default"
+									value={shell()}
+									onInput={e => handleShellInput(e.currentTarget.value)}
+								/>
+							</div>
 						</div>
 						<h3 class="text-main font-semibold uppercase sm:text-3xl md:text-5xl lg:text-7xl xl:text-9xl">
 							Shortcuts

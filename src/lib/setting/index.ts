@@ -21,3 +21,11 @@ export async function getTheme(): Promise<Theme> {
 export async function setTheme(theme: Theme) {
 	await store.set('theme', theme);
 }
+
+export async function getShell(): Promise<string> {
+	return (await store.get<string>('shell')) || '';
+}
+
+export async function setShell(shell: string) {
+	await store.set('shell', shell);
+}
